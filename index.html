@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dipan Das — Backend & AI Infrastructure Engineer</title>
+  <meta name="description" content="Backend & AI Infrastructure Engineer specializing in distributed systems, gRPC, Kafka, high-concurrency APIs, and production LLM guardrails." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root[data-theme="dark"] {
+      --bg: #0b0d10;
+      --bg-elevated: #12151a;
+      --bg-hover: #181c23;
+      --border: #232832;
+      --text: #e6edf3;
+      --text-muted: #8b949e;
+      --accent: #58a6ff;
+      --accent-dim: rgba(88, 166, 255, 0.12);
+      --green: #3fb950;
+      --code-bg: #0f1216;
+    }
+
+    :root[data-theme="light"] {
+      --bg: #fafafa;
+      --bg-elevated: #ffffff;
+      --bg-hover: #f3f4f6;
+      --border: #e5e7eb;
+      --text: #111827;
+      --text-muted: #4b5563;
+      --accent: #2563eb;
+      --accent-dim: rgba(37, 99, 235, 0.08);
+      --green: #16a34a;
+      --code-bg: #f3f4f6;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+      font-size: 15px;
+      -webkit-font-smoothing: antialiased;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 3.5rem 1.5rem 5rem;
+    }
+
+    /* Top bar */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-elevated);
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+    }
+
+    .theme-btn {
+      background: var(--bg-elevated);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      padding: 0.28rem 0.65rem;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .theme-btn:hover {
+      color: var(--text);
+      border-color: var(--text-muted);
+    }
+
+    /* Header */
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      margin-bottom: 0.35rem;
+    }
+
+    .subtitle {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-bottom: 1.15rem;
+    }
+
+    .intro {
+      color: var(--text);
+      margin-bottom: 1.4rem;
+      max-width: 680px;
+    }
+
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      margin-bottom: 2.75rem;
+    }
+
+    .links a {
+      color: var(--text);
+      text-decoration: none;
+      padding: 0.35rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg-elevated);
+      transition: all 0.15s ease;
+    }
+
+    .links a:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    /* Sections */
+    section {
+      margin-bottom: 2.75rem;
+    }
+
+    .section-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      padding-bottom: 0.45rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* Metrics Strip */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .metric-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.85rem 0.9rem;
+    }
+
+    .metric-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1.2;
+      margin-bottom: 0.25rem;
+    }
+
+    .metric-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.35;
+    }
+
+    /* Architecture Case Studies (Expandable details) */
+    details.note {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 0.75rem;
+      overflow: hidden;
+      transition: border-color 0.15s ease;
+    }
+
+    details.note:hover {
+      border-color: #384152;
+    }
+
+    details.note[open] {
+      border-color: var(--accent);
+    }
+
+    summary.note-header {
+      padding: 0.95rem 1.1rem;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      font-weight: 600;
+    }
+
+    summary.note-header::-webkit-details-marker {
+      display: none;
+    }
+
+    .note-title-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .note-idx {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .note-tags {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .note-body {
+      padding: 0 1.1rem 1.1rem;
+      border-top: 1px solid var(--border);
+      padding-top: 0.9rem;
+      font-size: 14.2px;
+      color: var(--text-muted);
+    }
+
+    .note-body p {
+      margin-bottom: 0.75rem;
+      color: var(--text);
+    }
+
+    .note-body ul {
+      padding-left: 1.2rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .note-body li {
+      margin-bottom: 0.35rem;
+      color: var(--text);
+    }
+
+    pre.arch-diagram {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.75rem 0.9rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      overflow-x: auto;
+      color: var(--text);
+      margin-top: 0.5rem;
+    }
+
+    /* Projects Grid */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+
+    .project-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.15s ease;
+    }
+
+    .project-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .project-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.4rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .project-desc {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .project-lang {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      color: var(--text-muted);
+    }
+
+    /* Experience Timeline */
+    .exp-item {
+      padding: 0.75rem 0;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .exp-item:last-child {
+      border-bottom: none;
+    }
+
+    .exp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.25rem;
+    }
+
+    .exp-role {
+      font-weight: 600;
+    }
+
+    .exp-company {
+      color: var(--accent);
+    }
+
+    .exp-date {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .exp-summary {
+      font-size: 13.8px;
+      color: var(--text-muted);
+    }
+
+    footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    @media (max-width: 640px) {
+      .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+      summary.note-header {
+        flex-direction: column;
+        gap: 0.35rem;
+      }
+      .exp-header {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <div class="status-pill">
+        <span class="status-dot"></span>
+        <span>Bengaluru / Open to High-Scale Backend & AI Infra</span>
+      </div>
+      <button class="theme-btn" id="themeToggle" aria-label="Toggle theme">light / dark</button>
+    </div>
+
+    <header>
+      <h1>Dipan Das</h1>
+      <div class="subtitle">Software Engineer — Backend, Distributed Systems & AI Infrastructure</div>
+      <p class="intro">
+        I design and harden high-concurrency backend systems, event-driven orchestration pipelines, and production LLM guardrails. Over the last 4+ years at <strong>Rivi</strong> and <strong>Decathlon Sports India</strong>, my work has focused on making distributed APIs, real-time socket layers, and async AI workflows faster, cheaper, and resilient under load.
+      </p>
+      <div class="links">
+        <a href="mailto:dipandas.mail@gmail.com">dipandas.mail@gmail.com</a>
+        <a href="https://github.com/Infamia2334" target="_blank" rel="noopener">github.com/Infamia2334 ↗</a>
+        <a href="https://www.linkedin.com/in/dipan-das-556720172/" target="_blank" rel="noopener">LinkedIn ↗</a>
+        <a href="tel:+918420192885">+91 8420192885</a>
+      </div>
+    </header>
+
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-val">-83%</div>
+        <div class="metric-label">Chat History API latency via Snowflake IDs & cursor pagination</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-val">5,000+</div>
+        <div class="metric-label">Concurrent socket connections validated via k6 & Redis isolation</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-val">-50%</div>
+        <div class="metric-label">RPC & itinerary pipeline latency via gRPC, Protobuf & Kafka</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-val">4,900+</div>
+        <div class="metric-label">Stuck LLM sessions unblocked via event-driven evaluation queues</div>
+      </div>
+    </div>
+
+    <section>
+      <div class="section-title">
+        <span>Production Architecture Notes</span>
+        <span>Click to expand</span>
+      </div>
+
+      <details class="note" open>
+        <summary class="note-header">
+          <div class="note-title-wrap">
+            <span class="note-idx">01 // HIGH-THROUGHPUT APIS & STORAGE</span>
+            <span>Slashing Chat History Latency by 83% with Snowflake IDs & Cursor Pagination</span>
+          </div>
+          <span class="note-tags">PostgreSQL · Snowflake ID · Rate-Limiting</span>
+        </summary>
+        <div class="note-body">
+          <p>
+            <strong>The Bottleneck:</strong> Offset-based pagination and non-monotonic identifiers caused expensive index scans as conversation histories grew across enterprise tenants, while bursty client retries degraded tail latency.
+          </p>
+          <ul>
+            <li><strong>Time-Sortable 64-bit Snowflake IDs:</strong> Replaced random identifiers with k-sortable 64-bit Snowflake IDs encoding timestamp, worker ID, and sequence number, turning historical window queries into O(log N) B-Tree range seeks.</li>
+            <li><strong>Distributed Rate-Limiting:</strong> Paired the endpoint with a custom distributed rate-limiter across microservices, cutting abusive traffic and improving compute utilization by <strong>35%</strong>.</li>
+          </ul>
+<pre class="arch-diagram">
+[Client] ──► [Distributed Rate-Limiter (Redis)] ──► [Chat Service (gRPC)]
+                                                          │
+   SELECT * FROM messages                                 ▼
+   WHERE channel_id = $1 AND id < $cursor_snowflake_id  [PostgreSQL Composite Index]
+   ORDER BY id DESC LIMIT 50;                           (channel_id, id DESC) -> -83% Latency
+</pre>
+        </div>
+      </details>
+
+      <details class="note">
+        <summary class="note-header">
+          <div class="note-title-wrap">
+            <span class="note-idx">02 // CONCURRENCY & DATABASE HARDENING</span>
+            <span>Scaling to 5,000+ Concurrent Sockets & Resolving ~200 TPS DB Saturation</span>
+          </div>
+          <span class="note-tags">Redis · PostgreSQL · MongoDB · k6</span>
+        </summary>
+        <div class="note-body">
+          <p>
+            <strong>The Bottleneck:</strong> Profiling AI & search workloads under load revealed two critical ceilings: PostgreSQL CPU saturation capping throughput at ~200 TPS, and MongoDB/Redis disk I/O contention combined with write amplification on 2MB+ search payloads.
+          </p>
+          <ul>
+            <li><strong>Cache & Storage Isolation:</strong> Migrated Redis state to isolated GCP MemoryStore to eliminate shared disk I/O contention and restructured 2MB+ MongoDB payload writes to mitigate write amplification.</li>
+            <li><strong>Connection Pool Tuning & k6 Verification:</strong> Explicitly tuned PostgreSQL connection pools to prevent connection exhaustion under bursty AI worker traffic and authored automated <strong>k6</strong> load-testing suites validating stability across <strong>5,000+ concurrent socket connections</strong>.</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="note">
+        <summary class="note-header">
+          <div class="note-title-wrap">
+            <span class="note-idx">03 // AI INFRASTRUCTURE & COST GUARDRAILS</span>
+            <span>Event-Driven LLM Evaluation & Pre-LLM Voice/PII Guardrails (Cleartrip Launch)</span>
+          </div>
+          <span class="note-tags">Kafka · Presidio · Anthropic Haiku</span>
+        </summary>
+        <div class="note-body">
+          <p>
+            <strong>The Problem:</strong> At enterprise launch scale (including Cleartrip), cron-based session evaluation created a backlog of <strong>4,900+ blocked sessions</strong>, while unvalidated voice notes and raw user PII risked both compliance exposure and wasted LLM token spend.
+          </p>
+          <ul>
+            <li><strong>Pre-LLM Cost & Safety Gating:</strong> Tuned <strong>Microsoft Presidio</strong> for person-name PII redaction paired with <strong>Claude Haiku</strong> language detection, and rejected unsupported-language voice notes across Agent, CMS, and Chat services <em>before</em> invoking downstream LLMs.</li>
+            <li><strong>Event-Driven Evaluation & Async Itinerary Engine:</strong> Replaced the cron evaluator with event-driven worker pipelines (clearing 4,900+ queued sessions) and built a <strong>Kafka</strong> async recommendation pipeline that cut itinerary generation time by <strong>50%</strong>.</li>
+          </ul>
+<pre class="arch-diagram">
+[User Input / Voice Note]
+       │
+       ▼
+[Pre-LLM Gate: Language Check + Presidio PII Masking] ──(Unsupported Audio)──► [Fast Reject: $0 Token Cost]
+       │ (Sanitized Payload)
+       ▼
+[Agent / LLM Orchestrator] ──(Async Event)──► [Kafka Queue] ──► [Event-Driven Evaluator & Metrics Aggregator]
+</pre>
+        </div>
+      </details>
+
+      <details class="note">
+        <summary class="note-header">
+          <div class="note-title-wrap">
+            <span class="note-idx">04 // MULTI-TENANT PLATFORM & SECURITY</span>
+            <span>Zero-Drift Multi-Tenant Schema Runner & Redis-Cached gRPC Redirect Service</span>
+          </div>
+          <span class="note-tags">TypeScript · gRPC · GitLab CI · TOTP MFA</span>
+        </summary>
+        <div class="note-body">
+          <ul>
+            <li><strong>Automated Multi-Tenant Migrations:</strong> Eliminated staging/production schema drift across isolated tenant schemas by standardizing <code>tenant_template</code> and building a <strong>TypeScript migration runner on GitLab CI</strong> that deterministically applies DDL migrations across active tenants.</li>
+            <li><strong>gRPC Redirect Service & Auth Hardening:</strong> Designed tenant adaptors behind a unified <strong>gRPC interface with Redis caching</strong> for low-latency cross-tenant user lookups, shipped hybrid Google OAuth + phone account-merge flows, built <strong>Twilio Verify TOTP MFA</strong> for admin dashboards, and locked down exposed Tenant Management routes behind AuthN/AuthZ middleware.</li>
+          </ul>
+        </div>
+      </details>
+    </section>
+
+    <section>
+      <div class="section-title">
+        <span>Selected Open-Source & Systems Code</span>
+        <span>github.com/Infamia2334</span>
+      </div>
+      <div class="projects-grid">
+        <a class="project-card" href="https://github.com/Infamia2334/resp-redis" target="_blank" rel="noopener">
+          <div>
+            <div class="project-head">
+              <span>resp-redis</span>
+              <span>↗</span>
+            </div>
+            <p class="project-desc">
+              Multi-protocol in-memory datastore implementation supporting both native Redis Serialization Protocol (RESP) and gRPC interfaces.
+            </p>
+          </div>
+          <div class="project-lang">TypeScript · Node.js · RESP · gRPC</div>
+        </a>
+
+        <a class="project-card" href="https://github.com/Infamia2334/voyager" target="_blank" rel="noopener">
+          <div>
+            <div class="project-head">
+              <span>voyager</span>
+              <span>↗</span>
+            </div>
+            <p class="project-desc">
+              Modular, extensible network diagnostics and packet-path analysis CLI tool inspired by classic traceroute.
+            </p>
+          </div>
+          <div class="project-lang">TypeScript · Networking · CLI</div>
+        </a>
+
+        <a class="project-card" href="https://github.com/Infamia2334/semantic-spread-search" target="_blank" rel="noopener">
+          <div>
+            <div class="project-head">
+              <span>semantic-spread-search</span>
+              <span>↗</span>
+            </div>
+            <p class="project-desc">
+              Semantic AI search and natural-language filtering engine for structured spreadsheet datasets.
+            </p>
+          </div>
+          <div class="project-lang">TypeScript · LLM Embeddings · Search</div>
+        </a>
+
+        <a class="project-card" href="https://github.com/Infamia2334/go-tasks" target="_blank" rel="noopener">
+          <div>
+            <div class="project-head">
+              <span>go-tasks</span>
+              <span>↗</span>
+            </div>
+            <p class="project-desc">
+              Lightweight concurrent task management service and REST API built with Go.
+            </p>
+          </div>
+          <div class="project-lang">Go (Golang) · REST API</div>
+        </a>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title">
+        <span>Experience</span>
+        <span>4+ Years Total (Full-Time + Embedded)</span>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header">
+          <div>
+            <span class="exp-role">Software Development Engineer (Backend)</span> · <span class="exp-company">Rivi</span>
+          </div>
+          <span class="exp-date">07/2023 — Present</span>
+        </div>
+        <div class="exp-summary">
+          Core distributed architecture (gRPC/Protobuf, Kafka), PostgreSQL/Redis scaling (5,000+ sockets), multi-tenant schema automation, and AI guardrails (Presidio PII, event-driven LLM evaluation) for enterprise travel launches including Cleartrip.
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header">
+          <div>
+            <span class="exp-role">Backend Developer</span> · <span class="exp-company">Decathlon Sports India</span>
+          </div>
+          <span class="exp-date">07/2022 — 07/2023</span>
+        </div>
+        <div class="exp-summary">
+          Worked with Decathlon India leadership & the Global Hub team in France on Decathlon PLAY. Built Node.js adapter microservices over Python, integrated Fitbit/Garmin/Strava/Coros APIs (+40% engagement), and shipped Algolia + event-driven sync schedulers (-40% API latency).
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header">
+          <div>
+            <span class="exp-role">Product Engineer (Backend)</span> · <span class="exp-company">School of Accelerated Learning</span>
+          </div>
+          <span class="exp-date">01/2023 — 05/2023</span>
+        </div>
+        <div class="exp-summary">
+          Built automated WhatsApp notification pipelines (+15% engagement) and migrated core backend services from vanilla Node.js to strict TypeScript (+30% release stability).
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header">
+          <div>
+            <span class="exp-role">Junior Backend Developer</span> · <span class="exp-company">Rivi</span>
+          </div>
+          <span class="exp-date">11/2021 — 07/2022</span>
+        </div>
+        <div class="exp-summary">
+          Built backend services for Hawaii's unified entry-ticket & parking platform (featured on CNN), optimized flight-adapter microservices (+20% efficiency), and centralized microservice logging (-25% bug reports).
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title">
+        <span>Technical Stack</span>
+      </div>
+      <div class="exp-summary" style="color: var(--text); font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.8;">
+        <div><strong>Languages:</strong> TypeScript, JavaScript (Node.js), Python, SQL, Go (familiar)</div>
+        <div><strong>Distributed & Async:</strong> gRPC, Protocol Buffers, Apache Kafka, WebSockets, Hexagonal Microservices</div>
+        <div><strong>Data & Storage:</strong> PostgreSQL, MongoDB, Redis / GCP MemoryStore, CloudSQL, Algolia</div>
+        <div><strong>Cloud, Infra & Security:</strong> AWS (EKS), GCP, Kubernetes, Docker, GitLab/GitHub CI, k6, OAuth 2.0, TOTP MFA</div>
+        <div><strong>AI & LLM Infra:</strong> OpenAI/Anthropic APIs, Event-Driven LLM Eval, Microsoft Presidio PII Masking, Pre-LLM Guardrails</div>
+      </div>
+    </section>
+
+    <footer>
+      <span>Dipan Das · Backend & AI Infrastructure</span>
+      <span>Built with zero frameworks · Fast & minimal</span>
+    </footer>
+  </div>
+
+  <script>
+    const btn = document.getElementById('themeToggle');
+    const html = document.documentElement;
+    btn.addEventListener('click', () => {
+      const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+    });
+  </script>
+</body>
+</html>
